@@ -1,0 +1,22 @@
+{
+  "id": 1,
+  "products": [
+    {
+      "name": "potato",
+      "cost": 2.55
+    },
+    {
+      "name": "tomato",
+      "cost": 1.55
+    }
+  ],
+  "customer": {
+    "name": "John Smith",
+    "phone": "4581212"
+  },
+  "address": {
+    "street": "Apple str",
+    "number": "2",
+    "apartmentNumber": 5
+  }
+}
