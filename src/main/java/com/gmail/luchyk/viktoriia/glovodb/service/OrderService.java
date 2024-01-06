@@ -19,8 +19,11 @@ import com.gmail.luchyk.viktoriia.glovodb.repository.OrderRepository;
 import com.gmail.luchyk.viktoriia.glovodb.repository.ProductRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
+
+import static org.springframework.http.HttpStatus.NOT_FOUND;
 
 @AllArgsConstructor
 @Service
@@ -31,7 +34,7 @@ public class OrderService {
     private CustomerRepository customerRepository;
 
     public Order get(int id) {
-        return orderRepository.findById(id).map(OrderConverter::toOrder).orElseThrow();
+        return orderRepository.findById(id).map(OrderConverter::toOrder).orElseThrow(() -> new ResponseStatusException(NOT_FOUND));
     }
 
 
@@ -47,7 +50,7 @@ public class OrderService {
 
 
     public Order update(int id, Order order) {
-        OrderEntity sourceEntity = orderRepository.findById(id).orElseThrow();
+        OrderEntity sourceEntity = orderRepository.findById(id).orElseThrow(() -> new ResponseStatusException(NOT_FOUND));
         OrderEntity targetEntity = OrderConverter.toOrderEntity(order);
 
         targetEntity.setId(sourceEntity.getId());
@@ -73,7 +76,7 @@ public class OrderService {
 
 
     public Order update(int id, String productName, Product updated) {
-        OrderEntity sourceEntity = orderRepository.findById(id).orElseThrow();
+        OrderEntity sourceEntity = orderRepository.findById(id).orElseThrow(() -> new ResponseStatusException(NOT_FOUND));
         List<ProductEntity> sourceProductEntities = sourceEntity.getProducts();
         for (int i = 0; i < sourceProductEntities.size(); i++) {
             if (sourceProductEntities.get(i).getName().equals(productName)) {
@@ -90,7 +93,7 @@ public class OrderService {
 
 
     public Order updateCustomer(int id, Customer customer) {
-        OrderEntity sourceEntity = orderRepository.findById(id).orElseThrow();
+        OrderEntity sourceEntity = orderRepository.findById(id).orElseThrow(() -> new ResponseStatusException(NOT_FOUND));
         CustomerEntity sourceCustomerEntity = sourceEntity.getCustomer();
         CustomerEntity targetCustomerEntity = CustomerConverter.toCustomerEntity(customer);
         targetCustomerEntity.setId(sourceCustomerEntity.getId());
@@ -100,7 +103,7 @@ public class OrderService {
 
 
     public Order update(int id, Address address) {
-        OrderEntity sourceEntity = orderRepository.findById(id).orElseThrow();
+        OrderEntity sourceEntity = orderRepository.findById(id).orElseThrow(() -> new ResponseStatusException(NOT_FOUND));
         AddressEntity sourceAddressEntity = sourceEntity.getAddress();
         AddressEntity targetAddressEntity = AddressConverter.toAddressEntity(address);
         targetAddressEntity.setId(sourceAddressEntity.getId());
@@ -110,7 +113,7 @@ public class OrderService {
 
 
     public Order patch(int id, Product product) {
-        OrderEntity sourceEntity = orderRepository.findById(id).orElseThrow();
+        OrderEntity sourceEntity = orderRepository.findById(id).orElseThrow(() -> new ResponseStatusException(NOT_FOUND));
         List<ProductEntity> sourceProductEntities = sourceEntity.getProducts();
         ProductEntity targetProductEntity = ProductConverter.toProductEntity(product);
         targetProductEntity.setOrderId(sourceEntity.getId());
@@ -121,7 +124,7 @@ public class OrderService {
 
 
     public Order delete(int id, String productName) {
-        OrderEntity sourceEntity = orderRepository.findById(id).orElseThrow();
+        OrderEntity sourceEntity = orderRepository.findById(id).orElseThrow(() -> new ResponseStatusException(NOT_FOUND));
         List<ProductEntity> sourceProductEntities = sourceEntity.getProducts();
         for (int i = 0; i < sourceProductEntities.size(); i++) {
             if (sourceProductEntities.get(i).getName().equals(productName)) {
@@ -136,7 +139,7 @@ public class OrderService {
 
 
     public void delete(int id) {
-        OrderEntity sourceEntity = orderRepository.findById(id).orElseThrow();
+        OrderEntity sourceEntity = orderRepository.findById(id).orElseThrow(() -> new ResponseStatusException(NOT_FOUND));
         orderRepository.delete(sourceEntity);
     }
 }
