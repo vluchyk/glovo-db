@@ -33,7 +33,7 @@ CREATE TABLE IF NOT EXISTS public.products
     id bigint NOT NULL GENERATED ALWAYS AS IDENTITY,
     name character varying(32) NOT NULL,
     cost double precision,
-    order_id bigint NOT NULL,
+    order_id bigint,
     CONSTRAINT products_pkey PRIMARY KEY (id),
     CONSTRAINT order_id FOREIGN KEY (order_id)
     REFERENCES public.orders (id) MATCH SIMPLE
