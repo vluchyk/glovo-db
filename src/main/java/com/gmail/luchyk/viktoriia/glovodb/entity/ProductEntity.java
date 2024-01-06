@@ -14,7 +14,7 @@ import lombok.NoArgsConstructor;
 @Table(name = "products")
 public class ProductEntity {
     @Id
-    @GeneratedValue (strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
     private String name;
     private double cost;

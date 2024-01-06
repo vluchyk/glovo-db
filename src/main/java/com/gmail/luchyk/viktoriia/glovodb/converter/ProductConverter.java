@@ -8,7 +8,6 @@ public class ProductConverter {
         return Product.builder()
                 .name(productEntity.getName())
                 .cost(productEntity.getCost())
- //               .order(OrderConverter.toOrder(productEntity.getOrder()))
                 .build();
     }
 
@@ -16,7 +15,6 @@ public class ProductConverter {
         return ProductEntity.builder()
                 .name(product.getName())
                 .cost(product.getCost())
- //               .order(OrderConverter.toOrderEntity(product.getOrder()))
                 .build();
     }
 }

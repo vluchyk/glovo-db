@@ -14,7 +14,7 @@ import lombok.NoArgsConstructor;
 @Table(name = "addresses")
 public class AddressEntity {
     @Id
-    @GeneratedValue (strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
     private String street;
     private String number;
