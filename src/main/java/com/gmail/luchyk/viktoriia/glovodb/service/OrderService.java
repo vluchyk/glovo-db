@@ -7,7 +7,10 @@ import com.gmail.luchyk.viktoriia.glovodb.dto.Customer;
 import com.gmail.luchyk.viktoriia.glovodb.dto.Order;
 import com.gmail.luchyk.viktoriia.glovodb.dto.Product;
 import com.gmail.luchyk.viktoriia.glovodb.entity.OrderEntity;
+import com.gmail.luchyk.viktoriia.glovodb.repository.AddressRepository;
+import com.gmail.luchyk.viktoriia.glovodb.repository.CustomerRepository;
 import com.gmail.luchyk.viktoriia.glovodb.repository.OrderRepository;
+import com.gmail.luchyk.viktoriia.glovodb.repository.ProductRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -15,6 +18,9 @@ import org.springframework.stereotype.Service;
 @Service
 public class OrderService {
     private OrderRepository orderRepository;
+    private ProductRepository productRepository;
+    private AddressRepository addressRepository;
+    private CustomerRepository customerRepository;
 
     public Order get(int id) {
         return orderRepository.findById(id).map(OrderConverter::toOrder).orElseThrow();
@@ -23,7 +29,12 @@ public class OrderService {
 
     public Order save(Order order) {
         OrderEntity orderEntity = OrderConverter.toOrderEntity(order);
-        return OrderConverter.toOrder(orderRepository.save(orderEntity));
+        customerRepository.save(orderEntity.getCustomer());
+        addressRepository.save(orderEntity.getAddress());
+        orderRepository.save(orderEntity);
+        orderEntity.getProducts().forEach(p -> p.setOrderId(orderEntity.getId()));
+        productRepository.saveAll(orderEntity.getProducts());
+        return OrderConverter.toOrder(orderEntity);
     }
 
 

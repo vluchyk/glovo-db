@@ -6,6 +6,9 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Entity
 @Data
 @Builder
@@ -14,14 +17,19 @@ import lombok.NoArgsConstructor;
 @Table(name = "orders")
 public class OrderEntity {
     @Id
+    @GeneratedValue (strategy = GenerationType.IDENTITY)
     private int id;
     private int number;
 
+    @OneToMany(fetch = FetchType.EAGER)
+    @JoinColumn(name = "order_id")
+    private List<ProductEntity> products = new ArrayList<>();
+
     @OneToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "id", nullable = false)
+    @JoinColumn(name = "customer_id", nullable = false)
     private CustomerEntity customer;
 
     @OneToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "id", nullable = false)
+    @JoinColumn(name = "address_id", nullable = false)
     private AddressEntity address;
 }

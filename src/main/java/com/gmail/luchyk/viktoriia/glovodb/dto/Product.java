@@ -8,5 +8,4 @@ import lombok.Data;
 public class Product {
     private String name;
     private double cost;
-    private Order order;
 }
