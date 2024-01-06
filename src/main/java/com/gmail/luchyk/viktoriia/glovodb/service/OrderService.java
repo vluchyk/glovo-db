@@ -141,5 +141,8 @@ public class OrderService {
     public void delete(int id) {
         OrderEntity sourceEntity = orderRepository.findById(id).orElseThrow(() -> new ResponseStatusException(NOT_FOUND));
         orderRepository.delete(sourceEntity);
+        customerRepository.delete(sourceEntity.getCustomer());
+        addressRepository.delete(sourceEntity.getAddress());
+        productRepository.deleteAll(sourceEntity.getProducts());
     }
 }
