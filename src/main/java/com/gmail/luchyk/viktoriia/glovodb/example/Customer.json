@@ -1,0 +1,15 @@
+{
+  "firstName": "John",
+  "middleName": "A.",
+  "lastName": "Smith",
+  "phone": "+380662550102",
+  "registrationAddress": 1,
+  "deliveryAddresses": [
+    {
+      "id": 1
+    },
+    {
+      "id": 2
+    }
+  ]
+}
