@@ -3,7 +3,9 @@
   "middleName": "A.",
   "lastName": "Smith",
   "phone": "+380662550102",
-  "registrationAddress": 1,
+  "registrationAddress": {
+    "id" : 1
+  },
   "deliveryAddresses": [
     {
       "id": 1

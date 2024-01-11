@@ -31,6 +31,6 @@ public class OrderEntity {
     )
     private List<ProductEntity> products = new ArrayList<>();
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     private CustomerEntity customer;
 }
