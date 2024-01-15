@@ -3,6 +3,8 @@ package com.gmail.luchyk.viktoriia.glovodb.converter;
 import com.gmail.luchyk.viktoriia.glovodb.dto.CustomerDto;
 import com.gmail.luchyk.viktoriia.glovodb.entity.CustomerEntity;
 
+import java.util.stream.Collectors;
+
 public class CustomerConverter {
     public static CustomerDto toDto(CustomerEntity customerEntity) {
         return CustomerDto.builder()
@@ -11,8 +13,8 @@ public class CustomerConverter {
                 .middleName(customerEntity.getMiddleName())
                 .lastName(customerEntity.getLastName())
                 .phone(customerEntity.getPhone())
-                .registrationAddress(customerEntity.getRegistrationAddress())
-                .deliveryAddresses(customerEntity.getDeliveryAddresses())
+                .registrationAddress(AddressConverter.toDto(customerEntity.getRegistrationAddress()))
+                .deliveryAddresses(customerEntity.getDeliveryAddresses().stream().map(AddressConverter::toDto).collect(Collectors.toSet()))
                 .build();
     }
 
@@ -23,8 +25,8 @@ public class CustomerConverter {
                 .middleName(customerDto.getMiddleName())
                 .lastName(customerDto.getLastName())
                 .phone(customerDto.getPhone())
-                .registrationAddress(customerDto.getRegistrationAddress())
-                .deliveryAddresses(customerDto.getDeliveryAddresses())
+                .registrationAddress(AddressConverter.toEntity(customerDto.getRegistrationAddress()))
+                .deliveryAddresses(customerDto.getDeliveryAddresses().stream().map(AddressConverter::toEntity).collect(Collectors.toSet()))
                 .build();
     }
 }

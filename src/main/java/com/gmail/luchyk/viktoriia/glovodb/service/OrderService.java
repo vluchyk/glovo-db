@@ -1,5 +1,6 @@
 package com.gmail.luchyk.viktoriia.glovodb.service;
 
+import com.gmail.luchyk.viktoriia.glovodb.converter.CustomerConverter;
 import com.gmail.luchyk.viktoriia.glovodb.converter.OrderConverter;
 import com.gmail.luchyk.viktoriia.glovodb.converter.ProductConverter;
 import com.gmail.luchyk.viktoriia.glovodb.dto.OrderDto;
@@ -32,8 +33,8 @@ public class OrderService {
     public OrderDto update(OrderDto orderDto) throws ObjectNotFoundException {
         OrderEntity orderEntity = orderRepository.findById(orderDto.getId()).orElseThrow(() -> new ObjectNotFoundException(Message.ORDER_NOT_FOUND.getMessage()));
         orderEntity.setNumber(orderDto.getNumber());
-        orderEntity.setProducts(orderDto.getProducts());
-        orderEntity.setCustomer(orderDto.getCustomer());
+        orderEntity.setProducts(orderDto.getProducts().stream().map(ProductConverter::toEntity).toList());
+        orderEntity.setCustomer(CustomerConverter.toEntity(orderDto.getCustomer()));
         orderRepository.save(orderEntity);
         return OrderConverter.toDto(orderEntity);
     }

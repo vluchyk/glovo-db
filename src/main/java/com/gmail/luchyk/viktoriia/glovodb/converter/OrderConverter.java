@@ -8,8 +8,8 @@ public class OrderConverter {
         return OrderDto.builder()
                 .id(orderEntity.getId())
                 .number(orderEntity.getNumber())
-                .products(orderEntity.getProducts())
-                .customer(orderEntity.getCustomer())
+                .products(orderEntity.getProducts().stream().map(ProductConverter::toDto).toList())
+                .customer(CustomerConverter.toDto(orderEntity.getCustomer()))
                 .build();
     }
 
@@ -17,8 +17,8 @@ public class OrderConverter {
         return OrderEntity.builder()
                 .id(orderDto.getId())
                 .number(orderDto.getNumber())
-                .products(orderDto.getProducts())
-                .customer(orderDto.getCustomer())
+                .products(orderDto.getProducts().stream().map(ProductConverter::toEntity).toList())
+                .customer(CustomerConverter.toEntity(orderDto.getCustomer()))
                 .build();
     }
 }
