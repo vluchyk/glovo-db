@@ -1,6 +1,5 @@
 package com.gmail.luchyk.viktoriia.glovodb.dto;
 
-import com.gmail.luchyk.viktoriia.glovodb.entity.AddressEntity;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -19,6 +18,6 @@ public class CustomerDto {
     private String middleName;
     private String lastName;
     private String phone;
-    private AddressEntity registrationAddress;
-    private Set<AddressEntity> deliveryAddresses = new HashSet<>();
+    private AddressDto registrationAddress;
+    private Set<AddressDto> deliveryAddresses = new HashSet<>();
 }

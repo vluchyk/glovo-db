@@ -13,6 +13,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @AllArgsConstructor
 @Service
@@ -35,8 +36,8 @@ public class CustomerService {
         customerEntity.setMiddleName(customerDto.getMiddleName());
         customerEntity.setLastName(customerDto.getLastName());
         customerEntity.setPhone(customerDto.getPhone());
-        customerEntity.setRegistrationAddress(customerDto.getRegistrationAddress());
-        customerEntity.setDeliveryAddresses(customerDto.getDeliveryAddresses());
+        customerEntity.setRegistrationAddress(AddressConverter.toEntity(customerDto.getRegistrationAddress()));
+        customerEntity.setDeliveryAddresses(customerDto.getDeliveryAddresses().stream().map(AddressConverter::toEntity).collect(Collectors.toSet()));
         customerRepository.save(customerEntity);
         return CustomerConverter.toDto(customerEntity);
     }
