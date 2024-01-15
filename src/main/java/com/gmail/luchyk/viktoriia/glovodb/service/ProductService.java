@@ -20,16 +20,14 @@ public class ProductService {
 
     public ProductDto save(ProductDto productDto) {
         ProductEntity productEntity = ProductConverter.toEntity(productDto);
-        productRepository.save(productEntity);
-        return ProductConverter.toDto(productEntity);
+        return ProductConverter.toDto(productRepository.save(productEntity));
     }
 
     public ProductDto update(ProductDto productDto) throws ObjectNotFoundException {
         ProductEntity productEntity = productRepository.findById(productDto.getId()).orElseThrow(() -> new ObjectNotFoundException(Message.PRODUCT_NOT_FOUND.getMessage()));
         productEntity.setName(productDto.getName());
         productEntity.setCost(productDto.getCost());
-        productRepository.save(productEntity);
-        return ProductConverter.toDto(productEntity);
+        return ProductConverter.toDto(productRepository.save(productEntity));
     }
 
     public void delete(ProductDto productDto) throws ObjectNotFoundException {
