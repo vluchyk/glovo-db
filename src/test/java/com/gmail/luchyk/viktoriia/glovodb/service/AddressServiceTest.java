@@ -2,6 +2,7 @@ package com.gmail.luchyk.viktoriia.glovodb.service;
 
 import com.gmail.luchyk.viktoriia.glovodb.converter.AddressConverter;
 import com.gmail.luchyk.viktoriia.glovodb.dto.AddressDto;
+import com.gmail.luchyk.viktoriia.glovodb.entity.AddressEntity;
 import com.gmail.luchyk.viktoriia.glovodb.enums.Message;
 import com.gmail.luchyk.viktoriia.glovodb.exception.ObjectNotFoundException;
 import com.gmail.luchyk.viktoriia.glovodb.repository.AddressRepository;
@@ -56,16 +57,18 @@ class AddressServiceTest {
     public void saveTest() {
         Mockito.when(addressRepository.save(any())).thenReturn(AddressConverter.toEntity(expected));
 
-        AddressDto result = addressService.save(new AddressDto());
+        AddressDto result = addressService.save(expected);
         Assertions.assertEquals(expected, result);
     }
 
     @Test
     public void updateTest() throws ObjectNotFoundException {
-        Mockito.when(addressRepository.findById(any())).thenReturn(Optional.of(AddressConverter.toEntity(expected)));
-        Mockito.when(addressRepository.save(any())).thenReturn(AddressConverter.toEntity(updated));
+        AddressDto existing = AddressDto.builder().id(updated.getId()).build();
+        AddressEntity addressEntity = AddressConverter.toEntity(existing);
+        Mockito.when(addressRepository.findById(any())).thenReturn(Optional.of(addressEntity));
+        Mockito.when(addressRepository.save(any())).thenReturn(addressEntity);
 
-        AddressDto result = addressService.update(new AddressDto());
+        AddressDto result = addressService.update(updated);
         Assertions.assertEquals(updated, result);
     }
 
@@ -73,25 +76,26 @@ class AddressServiceTest {
     public void updateNotFoundTest() {
         Mockito.when(addressRepository.findById(any())).thenReturn(Optional.empty());
 
-        ObjectNotFoundException objectNotFoundException = Assertions.assertThrows(ObjectNotFoundException.class, () -> addressService.update(new AddressDto()));
+        ObjectNotFoundException objectNotFoundException = Assertions.assertThrows(ObjectNotFoundException.class, () -> addressService.update(expected));
         Assertions.assertEquals(Message.ADDRESS_NOT_FOUND.getMessage(), objectNotFoundException.getMessage());
     }
 
     @Test
     public void deleteTest() throws ObjectNotFoundException {
         int wantedNumberOfInvocations = 1;
-        Mockito.when(addressRepository.findById(any())).thenReturn(Optional.of(AddressConverter.toEntity(new AddressDto())));
+        AddressEntity addressEntity = AddressConverter.toEntity(expected);
+        Mockito.when(addressRepository.findById(any())).thenReturn(Optional.of(addressEntity));
 
-        addressService.delete(new AddressDto());
+        addressService.delete(expected);
 
-        verify(addressRepository, times(wantedNumberOfInvocations)).delete(AddressConverter.toEntity(new AddressDto()));
+        verify(addressRepository, times(wantedNumberOfInvocations)).delete(addressEntity);
     }
 
     @Test
     public void deleteNotFoundTest() {
         Mockito.when(addressRepository.findById(any())).thenReturn(Optional.empty());
 
-        ObjectNotFoundException objectNotFoundException = Assertions.assertThrows(ObjectNotFoundException.class, () -> addressService.delete(new AddressDto()));
+        ObjectNotFoundException objectNotFoundException = Assertions.assertThrows(ObjectNotFoundException.class, () -> addressService.delete(expected));
         Assertions.assertEquals(Message.ADDRESS_NOT_FOUND.getMessage(), objectNotFoundException.getMessage());
     }
 }

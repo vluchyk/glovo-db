@@ -26,8 +26,7 @@ public class CustomerService {
 
     public CustomerDto save(CustomerDto customerDto) {
         CustomerEntity customerEntity = CustomerConverter.toEntity(customerDto);
-        customerRepository.save(customerEntity);
-        return CustomerConverter.toDto(customerEntity);
+        return CustomerConverter.toDto(customerRepository.save(customerEntity));
     }
 
     public CustomerDto update(CustomerDto customerDto) throws ObjectNotFoundException {
@@ -38,24 +37,21 @@ public class CustomerService {
         customerEntity.setPhone(customerDto.getPhone());
         customerEntity.setRegistrationAddress(AddressConverter.toEntity(customerDto.getRegistrationAddress()));
         customerEntity.setDeliveryAddresses(customerDto.getDeliveryAddresses().stream().map(AddressConverter::toEntity).collect(Collectors.toSet()));
-        customerRepository.save(customerEntity);
-        return CustomerConverter.toDto(customerEntity);
+        return CustomerConverter.toDto(customerRepository.save(customerEntity));
     }
 
     public CustomerDto patch(int id, AddressDto addressDto) throws ObjectNotFoundException {
         CustomerEntity customerEntity = customerRepository.findById(id).orElseThrow(() -> new ObjectNotFoundException(Message.CUSTOMER_NOT_FOUND.getMessage()));
         Set<AddressEntity> deliveryAddresses = customerEntity.getDeliveryAddresses();
         deliveryAddresses.add(AddressConverter.toEntity(addressDto));
-        customerRepository.save(customerEntity);
-        return CustomerConverter.toDto(customerEntity);
+        return CustomerConverter.toDto(customerRepository.save(customerEntity));
     }
 
     public CustomerDto deleteDeliveryAddress(int id, AddressDto addressDto) throws ObjectNotFoundException {
         CustomerEntity customerEntity = customerRepository.findById(id).orElseThrow(() -> new ObjectNotFoundException(Message.CUSTOMER_NOT_FOUND.getMessage()));
         Set<AddressEntity> deliveryAddresses = customerEntity.getDeliveryAddresses();
         deliveryAddresses.remove(AddressConverter.toEntity(addressDto));
-        customerRepository.save(customerEntity);
-        return CustomerConverter.toDto(customerEntity);
+        return CustomerConverter.toDto(customerRepository.save(customerEntity));
     }
 
     public void delete(CustomerDto customerDto) throws ObjectNotFoundException {

@@ -2,6 +2,7 @@ package com.gmail.luchyk.viktoriia.glovodb.service;
 
 import com.gmail.luchyk.viktoriia.glovodb.converter.ProductConverter;
 import com.gmail.luchyk.viktoriia.glovodb.dto.ProductDto;
+import com.gmail.luchyk.viktoriia.glovodb.entity.ProductEntity;
 import com.gmail.luchyk.viktoriia.glovodb.enums.Message;
 import com.gmail.luchyk.viktoriia.glovodb.exception.ObjectNotFoundException;
 import com.gmail.luchyk.viktoriia.glovodb.repository.ProductRepository;
@@ -55,16 +56,18 @@ class ProductServiceTest {
     public void saveTest() {
         Mockito.when(productRepository.save(any())).thenReturn(ProductConverter.toEntity(expected));
 
-        ProductDto result = productService.save(new ProductDto());
+        ProductDto result = productService.save(expected);
         Assertions.assertEquals(expected, result);
     }
 
     @Test
     public void updateTest() throws ObjectNotFoundException {
-        Mockito.when(productRepository.findById(any())).thenReturn(Optional.of(ProductConverter.toEntity(expected)));
-        Mockito.when(productRepository.save(any())).thenReturn(ProductConverter.toEntity(updated));
+        ProductDto existing = ProductDto.builder().id(updated.getId()).build();
+        ProductEntity productEntity = ProductConverter.toEntity(existing);
+        Mockito.when(productRepository.findById(any())).thenReturn(Optional.of(productEntity));
+        Mockito.when(productRepository.save(any())).thenReturn(productEntity);
 
-        ProductDto result = productService.update(new ProductDto());
+        ProductDto result = productService.update(updated);
         Assertions.assertEquals(updated, result);
     }
 
@@ -72,25 +75,25 @@ class ProductServiceTest {
     public void updateNotFoundTest() {
         Mockito.when(productRepository.findById(any())).thenReturn(Optional.empty());
 
-        ObjectNotFoundException objectNotFoundException = Assertions.assertThrows(ObjectNotFoundException.class, () -> productService.update(new ProductDto()));
+        ObjectNotFoundException objectNotFoundException = Assertions.assertThrows(ObjectNotFoundException.class, () -> productService.update(expected));
         Assertions.assertEquals(Message.PRODUCT_NOT_FOUND.getMessage(), objectNotFoundException.getMessage());
     }
 
     @Test
     public void deleteTest() throws ObjectNotFoundException {
         int wantedNumberOfInvocations = 1;
-        Mockito.when(productRepository.findById(any())).thenReturn(Optional.of(ProductConverter.toEntity(new ProductDto())));
+        Mockito.when(productRepository.findById(any())).thenReturn(Optional.of(ProductConverter.toEntity(expected)));
 
-        productService.delete(new ProductDto());
+        productService.delete(expected);
 
-        verify(productRepository, times(wantedNumberOfInvocations)).delete(ProductConverter.toEntity(new ProductDto()));
+        verify(productRepository, times(wantedNumberOfInvocations)).delete(ProductConverter.toEntity(expected));
     }
 
     @Test
     public void deleteNotFoundTest() {
         Mockito.when(productRepository.findById(any())).thenReturn(Optional.empty());
 
-        ObjectNotFoundException objectNotFoundException = Assertions.assertThrows(ObjectNotFoundException.class, () -> productService.delete(new ProductDto()));
+        ObjectNotFoundException objectNotFoundException = Assertions.assertThrows(ObjectNotFoundException.class, () -> productService.delete(expected));
         Assertions.assertEquals(Message.PRODUCT_NOT_FOUND.getMessage(), objectNotFoundException.getMessage());
     }
 }
