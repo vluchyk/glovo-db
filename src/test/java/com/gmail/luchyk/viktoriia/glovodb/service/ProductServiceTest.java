@@ -44,6 +44,7 @@ class ProductServiceTest {
         ProductDto result = productService.get(anyInt());
         Assertions.assertEquals(expected, result);
     }
+
     @Test
     public void getNotFoundTest() {
         Mockito.when(productRepository.findById(any())).thenReturn(Optional.empty());
@@ -62,7 +63,9 @@ class ProductServiceTest {
 
     @Test
     public void updateTest() throws ObjectNotFoundException {
-        ProductDto existing = ProductDto.builder().id(updated.getId()).build();
+        ProductDto existing = ProductDto.builder()
+                .id(updated.getId())
+                .build();
         ProductEntity productEntity = ProductConverter.toEntity(existing);
         Mockito.when(productRepository.findById(any())).thenReturn(Optional.of(productEntity));
         Mockito.when(productRepository.save(any())).thenReturn(productEntity);
@@ -82,11 +85,12 @@ class ProductServiceTest {
     @Test
     public void deleteTest() throws ObjectNotFoundException {
         int wantedNumberOfInvocations = 1;
-        Mockito.when(productRepository.findById(any())).thenReturn(Optional.of(ProductConverter.toEntity(expected)));
+        ProductEntity productEntity = ProductConverter.toEntity(expected);
+        Mockito.when(productRepository.findById(any())).thenReturn(Optional.of(productEntity));
 
         productService.delete(expected);
 
-        verify(productRepository, times(wantedNumberOfInvocations)).delete(ProductConverter.toEntity(expected));
+        verify(productRepository, times(wantedNumberOfInvocations)).delete(productEntity);
     }
 
     @Test

@@ -63,7 +63,9 @@ class AddressServiceTest {
 
     @Test
     public void updateTest() throws ObjectNotFoundException {
-        AddressDto existing = AddressDto.builder().id(updated.getId()).build();
+        AddressDto existing = AddressDto.builder()
+                .id(updated.getId())
+                .build();
         AddressEntity addressEntity = AddressConverter.toEntity(existing);
         Mockito.when(addressRepository.findById(any())).thenReturn(Optional.of(addressEntity));
         Mockito.when(addressRepository.save(any())).thenReturn(addressEntity);
