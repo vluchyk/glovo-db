@@ -26,8 +26,7 @@ public class OrderService {
 
     public OrderDto save(OrderDto orderDto) {
         OrderEntity orderEntity = OrderConverter.toEntity(orderDto);
-        orderRepository.save(orderEntity);
-        return OrderConverter.toDto(orderEntity);
+        return OrderConverter.toDto(orderRepository.save(orderEntity));
     }
 
     public OrderDto update(OrderDto orderDto) throws ObjectNotFoundException {
@@ -35,24 +34,21 @@ public class OrderService {
         orderEntity.setNumber(orderDto.getNumber());
         orderEntity.setProducts(orderDto.getProducts().stream().map(ProductConverter::toEntity).toList());
         orderEntity.setCustomer(CustomerConverter.toEntity(orderDto.getCustomer()));
-        orderRepository.save(orderEntity);
-        return OrderConverter.toDto(orderEntity);
+        return OrderConverter.toDto(orderRepository.save(orderEntity));
     }
 
     public OrderDto patch(int id, ProductDto productDto) throws ObjectNotFoundException {
         OrderEntity orderEntity = orderRepository.findById(id).orElseThrow(() -> new ObjectNotFoundException(Message.ORDER_NOT_FOUND.getMessage()));
         List<ProductEntity> products = orderEntity.getProducts();
         products.add(ProductConverter.toEntity(productDto));
-        orderRepository.save(orderEntity);
-        return OrderConverter.toDto(orderEntity);
+        return OrderConverter.toDto(orderRepository.save(orderEntity));
     }
 
     public OrderDto delete(int id, ProductDto productDto) throws ObjectNotFoundException {
         OrderEntity orderEntity = orderRepository.findById(id).orElseThrow(() -> new ObjectNotFoundException(Message.ORDER_NOT_FOUND.getMessage()));
         List<ProductEntity> products = orderEntity.getProducts();
         products.remove(ProductConverter.toEntity(productDto));
-        orderRepository.save(orderEntity);
-        return OrderConverter.toDto(orderEntity);
+        return OrderConverter.toDto(orderRepository.save(orderEntity));
     }
 
     public void delete(OrderDto orderDto) throws ObjectNotFoundException {
