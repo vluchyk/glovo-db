@@ -20,8 +20,7 @@ public class AddressService {
 
     public AddressDto save(AddressDto addressDto) {
         AddressEntity addressEntity = AddressConverter.toEntity(addressDto);
-        addressRepository.save(addressEntity);
-        return AddressConverter.toDto(addressEntity);
+        return AddressConverter.toDto(addressRepository.save(addressEntity));
     }
 
     public AddressDto update(AddressDto addressDto) throws ObjectNotFoundException {
@@ -29,8 +28,7 @@ public class AddressService {
         addressEntity.setStreet(addressDto.getStreet());
         addressEntity.setNumber(addressDto.getNumber());
         addressEntity.setApartmentNumber(addressDto.getApartmentNumber());
-        addressRepository.save(addressEntity);
-        return AddressConverter.toDto(addressEntity);
+        return AddressConverter.toDto(addressRepository.save(addressEntity));
     }
 
     public void delete(AddressDto addressDto) throws ObjectNotFoundException {
